@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FutureVision</title>
+<style>
+body { background:#1a1a1a; color:#e9e2d0; font-family: monospace; text-align:center; padding-top:40px;}
+.machine { width:380px; margin:0 auto; padding:20px; background:#3c332a; border:6px solid #2a231d; border-radius:12px;}
+.slot-display { height:120px; background:#111; border:4px solid #2d261f; border-radius:8px; display:flex; justify-content:center; align-items:center; font-size:14px; margin-bottom:20px;}
+.button { background:#a61d1d; border:4px solid #5c0f0f; padding:12px 18px; border-radius:8px; color:#ffe5e5; cursor:pointer;}
+.button:active { transform:scale(0.95); background:#8c1616;}
+@keyframes shake {0%{transform:translateX(0px);}20%{transform:translateX(-4px);}40%{transform:translateX(4px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}100%{transform:translateX(0px);}}
+.shake {animation:shake 0.5s;}
+</style>
+</head>
+<body>
+
+<h2>FutureVision</h2>
+<div class="machine">
+  <div id="slot" class="slot-display">Insert 1¢</div>
+  <button class="button" onclick="spin()">SPIN</button>
+</div>
+
+<script>
+// Your pool of spoilers
+const spoilers = [
+  "Secret Item A",
+  "Hidden Room B",
+  "Unknown Effect C",
+  "Mysterious Boss D",
+  "Power-Up E"
+];
+
+// Check localStorage for daily limit
+function canSpin() {
+  const last = localStorage.getItem("lastSpin");
+  const today = new Date().toISOString().slice(0,10);
+  return last !== today;
+}
+
+function setSpinDate() {
+  const today = new Date().toISOString().slice(0,10);
+  localStorage.setItem("lastSpin", today);
+}
+
+// Slot animation
+function runSlotAnimation(callback) {
+  const slot = document.getElementById("slot");
+  const fake = ["...", "??", "***", "@@", "$$", "###", "???"];
+  let i = 0;
+  slot.classList.add("shake");
+  const interval = setInterval(()=>{
+    slot.textContent = fake[i % fake.length];
+    i++;
+  }, 80);
+  setTimeout(()=>{
+    clearInterval(interval);
+    slot.classList.remove("shake");
+    callback();
+  }, 900);
+}
+
+// Main spin function
+function spin() {
+  const slot = document.getElementById("slot");
+  if (!canSpin()) {
+    slot.textContent = "You've already spun today!";
+    return;
+  }
+
+  runSlotAnimation(()=>{
+    const pick = spoilers[Math.floor(Math.random() * spoilers.length)];
+    slot.textContent = pick;
+    setSpinDate();
+  });
+}
+</script>
+
+</body>
+</html>
