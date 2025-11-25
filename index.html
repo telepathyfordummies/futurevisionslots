@@ -103,6 +103,13 @@ body {
 </div>
 
 <script>
+
+  //  TOGGLE DAILY LIMIT ON/OFF
+
+const DAILY_LIMIT_ENABLED = false;  // change to true when ready
+
+  // ITEM POOL!
+  
 const spoilers = [
   "Craig really could see it in her eyes then.",
   "Sometimes a story is told nonlinearly.",
@@ -128,6 +135,34 @@ const spoilers = [
   "horse2.png"
 ];
 
+
+// DAILY LIMIT FUNCTIONS
+function canSpin() {
+  if (!DAILY_LIMIT_ENABLED) return true;   // unlimited while testing
+
+  const last = localStorage.getItem("lastSpin");
+  const today = new Date().toISOString().slice(0, 10);
+  return last !== today;
+}
+
+function setSpinDate() {
+  if (!DAILY_LIMIT_ENABLED) return;  // do nothing if disabled
+
+  const today = new Date().toISOString().slice(0, 10);
+  localStorage.setItem("lastSpin", today);
+}
+
+
+// MAIN CLICK HANDLER
+document.getElementById("machine").addEventListener("click", () => {
+
+  if (!canSpin()) {
+    showScroll("You've already spun today!");
+    return;
+  }
+
+  setSpinDate();
+  
 document.getElementById("machine").addEventListener("click", () => {
   const pick = spoilers[Math.floor(Math.random() * spoilers.length)];
   showScroll(pick);
