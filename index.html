@@ -94,15 +94,15 @@ const spoilers = [
 ];
 
 // LocalStorage daily limit
-function canSpin() {
-  const last = localStorage.getItem("lastSpin");
-  const today = new Date().toISOString().slice(0,10);
-  return last !== today;
-}
-function setSpinDate() {
-  const today = new Date().toISOString().slice(0,10);
-  localStorage.setItem("lastSpin", today);
-}
+// function canSpin() {
+//  const last = localStorage.getItem("lastSpin");
+ // const today = new Date().toISOString().slice(0,10);
+ // return last !== today;
+//}
+//function setSpinDate() {
+  //const today = new Date().toISOString().slice(0,10);
+  //localStorage.setItem("lastSpin", today);
+//} 
 
 // MAIN MACHINE CLICK
 document.getElementById("machine").addEventListener("click", () => {
