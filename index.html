@@ -15,15 +15,15 @@ body {
 
 /* --- MACHINE CONTAINER --- */
 .machine-container {
-  position: relative;   /* scroll positions relative to this */
-  width: 600px;         /* larger machine */
+  position: relative;
+  width: 600px;
   margin: 0 auto;
 }
 
 /* --- MACHINE IMAGE BUTTON --- */
 #machine {
-  width: 100%;          /* fills container */
-  height: auto;         /* maintain aspect ratio */
+  width: 100%;
+  height: auto;
   cursor: pointer;
   transition: transform 0.1s;
 }
@@ -38,28 +38,38 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 480px;
-  min-height: 250px;
-  padding: 60px 20px;                 /* space inside scroll */
-  background: url('scroll.png') no-repeat center top / 100% auto;
   display: none;
+  flex-direction: column;
+  cursor: pointer;
   text-align: center;
+}
+
+/* Scroll top */
+.scroll-top {
+  height: 80px;
+  background: url('scroll-top.png') no-repeat center top / contain;
+}
+
+/* Scroll middle (stretchable) */
+.scroll-middle {
+  background: url('scroll-middle.png') repeat-y center top / contain;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Scroll bottom */
+.scroll-bottom {
+  height: 80px;
+  background: url('scroll-bottom.png') no-repeat center bottom / contain;
+}
+
+/* Text inside scroll */
+#scrollText {
   font-size: 26px;
   font-weight: bold;
   color: black;
   text-shadow: 2px 2px 0 #c3b39a;
-  box-sizing: border-box;
-  overflow-wrap: break-word;           /* prevent text overflow */
-}
-
-/* Text inside the scroll */
-#scrollText {
-  margin: 0;
   word-wrap: break-word;
-}
-
-/* Cursor for clickable scroll */
-#scrollPopup.closeable {
-  cursor: pointer;
 }
 </style>
 </head>
@@ -73,7 +83,11 @@ body {
 
   <!-- Scroll popup -->
   <div id="scrollPopup">
-    <div id="scrollText"></div>
+    <div class="scroll-top"></div>
+    <div class="scroll-middle">
+      <div id="scrollText"></div>
+    </div>
+    <div class="scroll-bottom"></div>
   </div>
 </div>
 
@@ -107,25 +121,24 @@ document.getElementById("machine").addEventListener("click", () => {
 });
 
 function showScroll(text) {
-  const popup = document.getElementById("scrollPopup");
-  const t = document.getElementById("scrollText");
+  const popup = document.getElementById("scrollPopup');
+  const t = document.getElementById("scrollText');
 
-  // Display image spoilers if present
   if (text.endsWith(".png") || text.endsWith(".jpg")) {
     t.innerHTML = `<img src="${text}" style="max-width:200px;">`;
   } else {
     t.textContent = text;
   }
 
-  popup.style.display = "block";
-  popup.classList.add("closeable");
+  popup.style.display = "flex";
 }
 
-// Close scroll on click
+// Close scroll when clicked
 document.getElementById("scrollPopup").addEventListener("click", () => {
-  document.getElementById("scrollPopup").style.display = "none";
+  document.getElementById("scrollPopup").style.display = "none';
 });
 </script>
 
 </body>
 </html>
+
