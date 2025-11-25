@@ -44,32 +44,47 @@ body {
   flex-direction: column;
 }
 
-/* Top of scroll */
+/* Scroll top */
 .scroll-top {
   height: 80px;
   background: url('scroll-top.png') no-repeat center top / contain;
 }
 
-/* Middle stretchable part */
+/* Scroll middle container */
 .scroll-middle {
-  background: url('scroll-middle.png') repeat-y center top / contain;
-  padding: 20px;
-  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Bottom of scroll */
-.scroll-bottom {
-  height: 80px;
-  background: url('scroll-bottom.png') no-repeat center bottom / contain;
+/* Stretchable middle image */
+.scroll-middle-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;      /* fills container height */
+  object-fit: fill;   /* stretches image to fit container */
+  z-index: 0;
 }
 
-/* Text inside scroll */
+/* Text on top */
 #scrollText {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
   font-size: 26px;
   font-weight: bold;
   color: black;
   text-shadow: 2px 2px 0 #c3b39a;
   word-wrap: break-word;
+}
+
+/* Scroll bottom */
+.scroll-bottom {
+  height: 80px;
+  background: url('scroll-bottom.png') no-repeat center bottom / contain;
 }
 </style>
 </head>
@@ -85,6 +100,7 @@ body {
   <div id="scrollPopup">
     <div class="scroll-top"></div>
     <div class="scroll-middle">
+      <img class="scroll-middle-img" src="scroll-middle.png" alt="middle">
       <div id="scrollText"></div>
     </div>
     <div class="scroll-bottom"></div>
@@ -124,15 +140,20 @@ document.getElementById("machine").addEventListener("click", () => {
 function showScroll(text) {
   const popup = document.getElementById("scrollPopup");
   const t = document.getElementById("scrollText");
+  const middle = document.querySelector('.scroll-middle');
 
-  // Show image spoilers if present
+  // Display image spoilers if present
   if (text.endsWith(".png") || text.endsWith(".jpg")) {
     t.innerHTML = `<img src="${text}" style="max-width:200px;">`;
   } else {
     t.textContent = text;
   }
 
-  // Display scroll
+  // Let middle container height grow with text
+  requestAnimationFrame(() => {
+    middle.style.height = t.offsetHeight + 40 + "px"; // text height + padding
+  });
+
   popup.style.display = "flex";
 }
 
@@ -144,5 +165,8 @@ document.getElementById("scrollPopup").addEventListener("click", () => {
 
 </body>
 </html>
+
+
+
 
 
