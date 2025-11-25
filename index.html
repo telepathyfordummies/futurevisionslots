@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>FutureVision</title>
+<title>Machine Scroll Demo</title>
 
 <style>
 body {
@@ -13,10 +13,18 @@ body {
   padding-top:40px;
 }
 
+/* --- MACHINE CONTAINER --- */
+.machine-container {
+  position: relative;   /* scroll positions relative to this */
+  width: 600px;         /* make machine bigger */
+  margin: 0 auto;
+}
+
 /* --- MACHINE IMAGE BUTTON --- */
 #machine {
-  width:260px;
-  cursor:pointer;
+  width: 100%;          /* fills container */
+  height: auto;         /* maintain aspect ratio */
+  cursor: pointer;
   transition: transform .1s;
 }
 #machine:active {
@@ -25,29 +33,33 @@ body {
 
 /* --- POPUP SCROLL --- */
 #scrollPopup {
-  position: fixed;
+  position: absolute;            /* relative to container */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 480px;
+  min-height: 250px;            /* starting height */
+  height: auto;                  /* expands with text */
   padding: 40px;
-  background: url("scroll.png") no-repeat center/contain;
-  height: 250px;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  text-align:center;
-  color:black;
+  background: url("scroll.png") no-repeat center top / 100% auto;
+  display: none;                 /* show when needed */
+  justify-content: flex-start;   /* align text to top */
+  align-items: flex-start;
+  text-align: center;
+  color: black;
   font-size: 26px;
   font-weight: bold;
   text-shadow: 2px 2px 0 #c3b39a;
+  box-sizing: border-box;
 }
 
+/* Text inside scroll */
 #scrollText {
-  width: 300px;
-  margin-top: 40px;
+  width: 100%;    /* fill scroll width */
+  margin-top: 0;  /* remove extra margin */
 }
 
+/* Cursor for closeable scroll */
 #scrollPopup.closeable {
   cursor: pointer;
 }
@@ -55,14 +67,16 @@ body {
 </head>
 <body>
 
-<h2>FutureVision</h2>
+<h2>Machine Scroll Demo</h2>
 
-<!-- CLICKABLE MACHINE PNG -->
-<img id="machine" src="machine.png" alt="machine">
+<!-- MACHINE CONTAINER -->
+<div class="machine-container">
+  <img id="machine" src="machine.png" alt="machine">
 
-<!-- SCROLL POPUP -->
-<div id="scrollPopup">
-  <div id="scrollText"></div>
+  <!-- SCROLL POPUP -->
+  <div id="scrollPopup">
+    <div id="scrollText"></div>
+  </div>
 </div>
 
 <script>
@@ -89,10 +103,6 @@ const spoilers = [
   "horse2.png"
 ];
 
-// localStorage OFF while testing
-function canSpin() { return true; }
-function setSpinDate() {}
-
 document.getElementById("machine").addEventListener("click", () => {
   const pick = spoilers[Math.floor(Math.random() * spoilers.length)];
   showScroll(pick);
@@ -112,6 +122,7 @@ function showScroll(text) {
   popup.classList.add("closeable");
 }
 
+// Close scroll on click
 document.getElementById("scrollPopup").addEventListener("click", () => {
   document.getElementById("scrollPopup").style.display = "none";
 });
@@ -119,3 +130,4 @@ document.getElementById("scrollPopup").addEventListener("click", () => {
 
 </body>
 </html>
+
