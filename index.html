@@ -122,36 +122,33 @@ const spoilers = [
   "WHO ARE YOU?",
   "???",
   "GOD ORIGINATES AT THE BOARDWALK.",
-  "Attention: If you or a loved one has been diagnosed with Mesothelioma you may to be entitled to financial compensation. Mesothelioma is a rare cancer linked to asbestos exposure...",
+  "Attention: If you or a loved one has been diagnosed with Mesothelioma...",
   "horse1.png",
   "horse2.png"
 ];
 
-// ---- DAILY LIMIT SETTINGS ----
-const COOLDOWN_HOURS = 24;
-const COOLDOWN_MS = COOLDOWN_HOURS * 60 * 60 * 1000;
+const cooldownMS = 24 * 60 * 60 * 1000; // 24 hours
 
-const machine = document.getElementById("machine");
-
-machine.addEventListener("click", () => {
-  const lastTime = localStorage.getItem("lastMachineUse");
+document.getElementById("machine").addEventListener("click", () => {
+  const last = localStorage.getItem("lastUse");
   const now = Date.now();
 
-  if (lastTime && now - lastTime < COOLDOWN_MS) {
-    // still on cooldown → show remaining time
-    const remaining = COOLDOWN_MS - (now - lastTime);
-    const hours = Math.floor(remaining / (1000 * 60 * 60));
-    const minutes = Math.floor((remaining % (1000*60*60)) / (1000*60));
+  if (last && now - last < cooldownMS) {
+    const remaining = cooldownMS - (now - last);
 
-    const msg = `You can use the machine again in ${hours}h ${minutes}m.`;
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+
+    const msg = 
+      `You must wait ${hours}h ${minutes}m before using the machine again.`;
+
     showScroll(msg);
-    return;
+    return; // VERY IMPORTANT — stops the scroll output
   }
 
-  // normal use → record time
-  localStorage.setItem("lastMachineUse", now);
+  // Store the time of use
+  localStorage.setItem("lastUse", now);
 
-  // pick random spoiler + show scroll
   const pick = spoilers[Math.floor(Math.random() * spoilers.length)];
   showScroll(pick);
 });
@@ -161,31 +158,27 @@ function showScroll(text) {
   const t = document.getElementById("scrollText");
   const sound = document.getElementById("scrollSound");
 
-  // Handle images
   if (text.endsWith(".png") || text.endsWith(".jpg")) {
     t.innerHTML = `<img src="${text}" style="max-width:200px;">`;
   } else {
     t.textContent = text;
   }
 
-  // Reset sound
   sound.currentTime = 0;
   sound.play();
 
-  // Show popup
   popup.style.display = "flex";
   popup.classList.add("closeable");
 
-  // Restart animation
   popup.classList.remove("pop-in");
   void popup.offsetWidth;
   popup.classList.add("pop-in");
 }
 
-// Close scroll
 document.getElementById("scrollPopup").addEventListener("click", () => {
   document.getElementById("scrollPopup").style.display = "none";
 });
 </script>
+
 </body>
 </html>
