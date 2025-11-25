@@ -122,12 +122,36 @@ const spoilers = [
   "WHO ARE YOU?",
   "???",
   "GOD ORIGINATES AT THE BOARDWALK.",
-  "Attention: If you or a loved one has been diagnosed with Mesothelioma you may to be entitled to financial compensation. Mesothelioma is a rare cancer linked to asbestos exposure. Exposure to asbestos in they Navy, shipyards, mills, heating, construction or the automotive industries may put you at risk. Please don't wait, call 1-800-99 LAW USA today for a free legal consultation and financial information packet. Mesothelioma patients call now! 1-800-99 LAW USA.",
+  "Attention: If you or a loved one has been diagnosed with Mesothelioma you may to be entitled to financial compensation. Mesothelioma is a rare cancer linked to asbestos exposure...",
   "horse1.png",
   "horse2.png"
 ];
 
-document.getElementById("machine").addEventListener("click", () => {
+// ---- DAILY LIMIT SETTINGS ----
+const COOLDOWN_HOURS = 24;
+const COOLDOWN_MS = COOLDOWN_HOURS * 60 * 60 * 1000;
+
+const machine = document.getElementById("machine");
+
+machine.addEventListener("click", () => {
+  const lastTime = localStorage.getItem("lastMachineUse");
+  const now = Date.now();
+
+  if (lastTime && now - lastTime < COOLDOWN_MS) {
+    // still on cooldown → show remaining time
+    const remaining = COOLDOWN_MS - (now - lastTime);
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000*60*60)) / (1000*60));
+
+    const msg = `You can use the machine again in ${hours}h ${minutes}m.`;
+    showScroll(msg);
+    return;
+  }
+
+  // normal use → record time
+  localStorage.setItem("lastMachineUse", now);
+
+  // pick random spoiler + show scroll
   const pick = spoilers[Math.floor(Math.random() * spoilers.length)];
   showScroll(pick);
 });
@@ -137,33 +161,31 @@ function showScroll(text) {
   const t = document.getElementById("scrollText");
   const sound = document.getElementById("scrollSound");
 
-  // Show text or image
+  // Handle images
   if (text.endsWith(".png") || text.endsWith(".jpg")) {
     t.innerHTML = `<img src="${text}" style="max-width:200px;">`;
   } else {
     t.textContent = text;
   }
 
-  // Reset and play sound
+  // Reset sound
   sound.currentTime = 0;
   sound.play();
 
-  // Show scroll & animate
+  // Show popup
   popup.style.display = "flex";
   popup.classList.add("closeable");
 
-  // Restart animation cleanly
+  // Restart animation
   popup.classList.remove("pop-in");
-  void popup.offsetWidth; // forces reflow so animation can replay
+  void popup.offsetWidth;
   popup.classList.add("pop-in");
 }
 
 // Close scroll
 document.getElementById("scrollPopup").addEventListener("click", () => {
-  const popup = document.getElementById("scrollPopup");
-  popup.style.display = "none";
+  document.getElementById("scrollPopup").style.display = "none";
 });
 </script>
-
 </body>
 </html>
