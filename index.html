@@ -93,24 +93,24 @@ const spoilers = [
   "horse2.png",
 ];
 
-// LocalStorage daily limit
-// function canSpin() {
-//  const last = localStorage.getItem("lastSpin");
- // const today = new Date().toISOString().slice(0,10);
- // return last !== today;
-//}
-//function setSpinDate() {
-  //const today = new Date().toISOString().slice(0,10);
-  //localStorage.setItem("lastSpin", today);
-//} 
+ LocalStorage daily limit
+ function canSpin() {
+  const last = localStorage.getItem("lastSpin");
+ const today = new Date().toISOString().slice(0,10);
+ return last !== today;
+}
+function setSpinDate() {
+  const today = new Date().toISOString().slice(0,10);
+  localStorage.setItem("lastSpin", today);
+} 
 
 // MAIN MACHINE CLICK
 document.getElementById("machine").addEventListener("click", () => {
 
-  if (!canSpin()) {
-    showScroll("You've already spun today!");
-    return;
-  }
+ // if (!canSpin()) {
+   // showScroll("You've already spun today!");
+   // return;
+ // }
 
   // pick random result
   const pick = spoilers[Math.floor(Math.random() * spoilers.length)];
