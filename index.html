@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Machine Scroll Demo</title>
+<title>Machine Scroll SVG Demo</title>
 <style>
 body {
   background: #1a1a1a;
@@ -28,6 +28,7 @@ body {
   transform: scale(0.95);
 }
 
+/* --- SCROLL POPUP --- */
 #scrollPopup {
   position: absolute;
   top: 50%;
@@ -40,25 +41,40 @@ body {
   flex-direction: column;
 }
 
+/* Scroll top */
 .scroll-top {
   height: 80px;
   background: url('scroll-top.png') no-repeat center top / contain;
 }
 
+/* Scroll middle container */
 .scroll-middle {
-  background: url('scroll-middle.png') no-repeat center top / 100% 100%;
-  padding: 20px;
-  box-sizing: border-box;
+  position: relative;
 }
 
+/* Stretchable middle SVG */
+.scroll-middle svg {
+  width: 100%;
+  height: 100%; /* container height will match text */
+  display: block;
+}
+
+/* Text inside scroll */
 #scrollText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
   font-size: 26px;
   font-weight: bold;
   color: black;
   text-shadow: 2px 2px 0 #c3b39a;
   word-wrap: break-word;
+  z-index: 1;
 }
 
+/* Scroll bottom */
 .scroll-bottom {
   height: 80px;
   background: url('scroll-bottom.png') no-repeat center bottom / contain;
@@ -67,7 +83,7 @@ body {
 </head>
 <body>
 
-<h2>Machine Scroll Demo</h2>
+<h2>Machine Scroll SVG Demo</h2>
 
 <div class="machine-container">
   <img id="machine" src="machine.png" alt="machine">
@@ -75,6 +91,10 @@ body {
   <div id="scrollPopup">
     <div class="scroll-top"></div>
     <div class="scroll-middle">
+      <!-- Use your uploaded SVG here -->
+      <svg id="middleSVG" viewBox="0 0 480 100" preserveAspectRatio="none">
+        <rect width="480" height="100" fill="#f5f0e1" />
+      </svg>
       <div id="scrollText"></div>
     </div>
     <div class="scroll-bottom"></div>
@@ -113,20 +133,30 @@ document.getElementById("machine").addEventListener("click", () => {
 function showScroll(text) {
   const popup = document.getElementById("scrollPopup");
   const t = document.getElementById("scrollText");
+  const svg = document.getElementById("middleSVG");
 
+  // Add text
   if (text.endsWith(".png") || text.endsWith(".jpg")) {
     t.innerHTML = `<img src="${text}" style="max-width:200px;">`;
   } else {
     t.textContent = text;
   }
 
+  // Resize SVG height to match text
+  requestAnimationFrame(() => {
+    svg.setAttribute('height', t.offsetHeight + 40); // text height + padding
+  });
+
   popup.style.display = "flex";
 }
 
+// Close scroll when clicked
 document.getElementById("scrollPopup").addEventListener("click", () => {
   document.getElementById("scrollPopup").style.display = "none";
 });
 </script>
+
 </body>
 </html>
+
 
